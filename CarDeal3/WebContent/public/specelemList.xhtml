@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+    	<f:viewParam name="c" value="#{specelemListBB.car.idCar}"
+		converterMessage="Nieoczekiwany błąd"/>
+	<f:event type="preRenderView" listener="#{specelemListBB.onLoad()}" />
+</f:metadata>
+
+<h:head>
+	<meta charset="utf-8"/>
+	<title>Customer List</title>
+</h:head>
+<h:body style="background-color: #eee; margin: 0.5em;">
+
+<script> 
+function reload() {
+	window.location.reload(false);
+	  
+}
+</script>
+
+	<p:panel header="Opcje wyszukiwania" toggleable="true" collapsed="true"
+		style="margin-bottom: 1em;">
+		<h:form>
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputLabel value="nazwa:" />
+				<p:inputText value="#{specelemListBB.specName}" />
+				<p:commandButton value="Szukaj" update="form-table" />
+			</h:panelGrid>
+		</h:form>
+	</p:panel>
+
+	<p:messages />
+
+	<h:form id="form-table" style="margin-bottom:1em;">
+
+		<p:commandButton value="Dodaj nowy element specyfikacji"
+			action="#{specelemListBB.newSpecelem()}" style="margin-bottom:1em;"/>
+			
+		<p:button outcome="/public/companyList" value="Powrót">	</p:button>
+		
+		<h:form> 
+		<p:commandButton value="Odśwież" onclick="reload()" />
+		</h:form>
+
+		<p:dataTable value="#{specelemListBB.list}" var="c" rows="10" 
+					 paginator="true"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                     rowsPerPageTemplate="5,10,{ShowAll|'All'}">
+
+			<p:column priority="5">
+				<f:facet name="header">
+					<h:outputText value="nazwa" />
+				</f:facet>
+				<h:outputText value="#{c.specName}" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="wartość" />
+				</f:facet>
+				<h:outputText value="#{c.specValue}" />
+			</p:column>
+		
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="opcje" />
+				</f:facet>
+
+				<p:commandButton value="Edytuj"
+					action="#{specelemListBB.editSpecelem(c)}" />
+
+				<p:commandButton value="Usuń"
+					action="#{specelemListBB.deleteSpecelem(c)}" update="@form" />
+
+			</p:column>
+			
+		</p:dataTable>
+	</h:form>
+
+</h:body>
+</html>
